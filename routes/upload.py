@@ -6,6 +6,6 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
 
-    result = await process_upload(file)
+    result = await process_upload(file) # Process the uploaded file and get the result
 
     return result

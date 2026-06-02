@@ -9,6 +9,7 @@ class TextInput(BaseModel):
 
 @router.post("/summarize")
 def summarize(input: TextInput):
+
     summary = generate_summary(input.text)
 
     return {
