@@ -1,21 +1,45 @@
-from fastapi import APIRouter, UploadFile, File, Form
-from services.pdf_service import extract_text_from_pdf
-from services.question_service import ask_question
+from fastapi import APIRouter, Form, HTTPException 
+
+from data.document_store import documents
+from services.openai_service import generate_embedding, answer_question_about_document
+from services.similarity_service import find_most_relevant_chunks
 
 router = APIRouter()
 
 
-@router.post("/ask")
+@router.post("/ask/{document_id}")
 async def ask_document_question(
-    file: UploadFile = File(...),
+    document_id: str,
     question: str = Form(...)
 ):
-    text = extract_text_from_pdf(file)
+    if document_id not in documents:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found"
+        )
 
-    answer = ask_question(text, question)
+    document = documents[document_id]
+
+    question_embedding = generate_embedding(question)
+
+    relevant_chunks = find_most_relevant_chunks(
+        question_embedding,
+        document["chunks"],
+        top_k=3
+    )
+
+    context = "\n\n".join(
+        chunk["text"] for chunk in relevant_chunks
+    )
+
+    answer = answer_question_about_document(context, question)
 
     return {
-        "filename": file.filename,
+        "document_id": document_id,
         "question": question,
-        "answer": answer
+        "answer": answer,
+        "sources_used": len(relevant_chunks),
+        "similarities": [
+            chunk["similarity"] for chunk in relevant_chunks
+        ]
     }
