@@ -2,6 +2,12 @@
 
 An AI-powered document assistant that analyzes PDFs. Upload a document, get an automatic summary, and ask questions about the content — powered by a RAG pipeline built with FastAPI, OpenAI, and cosine similarity search.
 
+## 🚀 Live Demo
+
+[https://ai-document-api-g7vg.onrender.com/docs](https://ai-document-api-g7vg.onrender.com/docs)
+
+> Note: free instance — first request may take ~50 seconds to wake up.
+
 ---
 
 ## What it does
@@ -57,7 +63,9 @@ Summary (GPT-4.1-mini)     Question Answering
 | Embeddings | text-embedding-3-small (OpenAI) |
 | PDF Processing | pypdf |
 | Similarity Search | Cosine similarity (custom implementation) |
-| Language | Python 3.11+ |
+| Containerization | Docker |
+| Deployment | Render |
+| Language | Python 3.14 |
 
 ---
 
@@ -82,6 +90,8 @@ ai-document-api/
 │   └── document_store.py     # In-memory document storage
 ├── utils/
 │   └── config.py             # Environment variables
+├── Dockerfile
+├── docker-compose.yml
 ├── .env                      # API keys (not committed)
 ├── requirements.txt
 └── README.md
@@ -129,6 +139,18 @@ uvicorn app.main:app --reload
 ```
 
 The API is now running at `http://localhost:8000`
+
+---
+
+## Running with Docker
+
+Make sure Docker Desktop is running, then:
+
+```bash
+docker-compose up --build
+```
+
+The API will be available at `http://localhost:8000`
 
 ---
 
@@ -211,6 +233,8 @@ This makes the system faster, cheaper, and more accurate.
 - OpenAI API — chat completions and embeddings
 - RAG pipeline — chunking, embedding, retrieval, and generation
 - Git & GitHub — version control and project management
+- Docker — containerizing applications for consistent deployment
+- Deployment — shipping a live API on Render
 - Error handling — HTTP exceptions and try/except patterns
 
 ---
@@ -218,8 +242,8 @@ This makes the system faster, cheaper, and more accurate.
 ## Next steps
 
 - [ ] Persistent storage (PostgreSQL)
-- [ ] Docker support
 - [ ] Frontend UI
 - [ ] Authentication
-- [ ] Deployment (Railway / Render)
+- [ ] Chat history
+- [ ] Vector database (pgvector / Pinecone)
 
