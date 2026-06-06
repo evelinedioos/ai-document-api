@@ -22,8 +22,7 @@ async def process_upload(file: UploadFile):
         file.file.seek(0)
         text = extract_text_from_pdf(file)
 
-        chunks = create_chunks(text)
-
+        chunks = create_chunks(text, chunk_size=1000, overlap=100)
         chunk_data = []
 
         for chunk in chunks:
